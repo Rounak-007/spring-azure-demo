@@ -8,6 +8,6 @@ public class DemoController {
 
     @GetMapping("/message")
     public String getMessage(){
-        return "Congrats!! you app is deployed to azure..";
+        return "Congrats!! Your Application is successfully deployed to Azure..";
     }
 }
