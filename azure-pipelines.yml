@@ -26,14 +26,23 @@ steps:
     Contents: '**/target/*.jar'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-# Step 3: Deploy to Staging (Added appType)
+# # Step 3: Deploy to Staging (Added appType)
+# - task: AzureWebApp@1
+#   displayName: 'Deploy to Staging Slot'
+#   inputs:
+#     azureSubscription: 'demo-conn'
+#     appType: 'webApp'
+#     appName: '$(appName)'
+#     deployToSlotOrASE: true
+#     resourceGroupName: '$(resourceGroup)'
+#     slotName: '$(slotName)'
+#     package: '$(Build.ArtifactStagingDirectory)/**/*.jar'
+
+# Step 3: Deploy to Azure Web App
 - task: AzureWebApp@1
-  displayName: 'Deploy to Staging Slot'
+  displayName: Deploy to Azure Web App
   inputs:
     azureSubscription: 'demo-conn'
-    appType: 'webApp'
+    appType: webApp
     appName: '$(appName)'
-    deployToSlotOrASE: true
-    resourceGroupName: '$(resourceGroup)'
-    slotName: '$(slotName)'
     package: '$(Build.ArtifactStagingDirectory)/**/*.jar'
