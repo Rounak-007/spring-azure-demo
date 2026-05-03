@@ -1,0 +1,39 @@
+ # Maven
+ # Build your Java project and run tests with Apache Maven.
+ # Add steps that analyze code, save build artifacts, deploy, and more:
+ # https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+variables:
+  appName: 'test-demo-app'
+  slotName: 'test-demo-app-staging'
+  resourceGroup: 'rg-demo-001'
+
+pool:
+  name: Default
+
+steps:
+- script: mvn clean package
+  displayName: Build with Maven
+
+#Step 2: Copy JAR to staging folder
+- task: CopyFiles@2
+  displayName: Copy JAR to artifact staging directory
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: '**/target/*.jar'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+# Step 3: Deploy to Staging (Added appType)
+- task: AzureWebApp@1
+  displayName: 'Deploy to Staging Slot'
+  inputs:
+    azureSubscription: 'demo-conn'
+    appType: 'webApp'
+    appName: '$(appName)'
+    deployToSlotOrASE: true
+    resourceGroupName: '$(resourceGroup)'
+    slotName: '$(slotName)'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.jar'
